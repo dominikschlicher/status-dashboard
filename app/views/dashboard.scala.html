@@ -1,0 +1,9 @@
+@(list: List[System])
+
+
+@main("Dashboard") {
+    <h1>Dashboard</h1>
+    <ul>
+        @for(item <- list) { <li>@item.name, @item.status</li> }
+    </ul>
+}

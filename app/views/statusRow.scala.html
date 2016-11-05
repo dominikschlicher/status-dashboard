@@ -1,0 +1,6 @@
+@(systemView : SystemView)
+
+<tr class="@systemView.statusCssClass">
+    <td>@systemView.displayName</td>
+    <td><span class="label label-@systemView.statusCssClass">@systemView.status</span>
+</tr>

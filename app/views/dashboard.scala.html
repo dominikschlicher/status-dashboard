@@ -1,9 +1,9 @@
-@(list: List[System])
+@(list: List[SystemView])
 
 
 @main("Dashboard") {
-    <h1>Dashboard</h1>
-    <ul>
-        @for(item <- list) { <li>@item.name, @item.status</li> }
-    </ul>
+    <h1>Your systems</h1>
+    <table class="table table-striped table-hover">
+        @for(systemView <- list) { @statusRow(systemView) }
+    </table>
 }

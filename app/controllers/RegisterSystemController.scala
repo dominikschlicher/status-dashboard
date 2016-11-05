@@ -1,50 +1,38 @@
 package controllers
 
 
-import models.RegisteredSystem
-import play.api.Play.current
-import play.api.data.Forms._
-import play.api.data._
-import play.api.i18n.Messages.Implicits._
+import models.{RegisteredSystem, SystemForm}
 import play.api.mvc._
+import services.SystemService
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class RegisterSystemController extends Controller {
 
 
-  val systemForm = Form(
-    mapping(
-      "name" -> nonEmptyText,
-      "url" -> nonEmptyText
-    )(RegisteredSystem.apply)(RegisteredSystem.unapply)
-  )
-
-
-  def index = Action {
-    Ok(views.html.registerSystem(systemForm))
+  def index = Action.async {
+    implicit request =>
+      SystemService.listAllSystems map { systems =>
+        Ok(views.html.registerSystem(SystemForm.systemForm, systems))
+      }
   }
 
 
-  def handleRequest = Action {
+  def addSystem = Action.async {
     implicit request => {
-      systemForm.bindFromRequest.fold(
-        formWithErrors => {
-          // binding failure, you retrieve the form containing errors:
-          BadRequest(views.html.registerSystem(formWithErrors)) // kein BadRequest
+      SystemForm.systemForm.bindFromRequest.fold(
+        errorForm => {
+          SystemService.listAllSystems map { systems =>
+            Ok(views.html.registerSystem(errorForm, systems))
+          }
         },
         serviceData => {
-          /* binding success, you get the actual value. */
-          val newService = models.RegisteredSystem(serviceData.name, serviceData.url)
-          Redirect("/dashboard")
+          val newService = RegisteredSystem(0, serviceData.name, serviceData.url)
+          SystemService.addSystem(newService).map(res => Redirect(routes.RegisterSystemController.index()))
         }
       )
     }
-  }
-
-
-  val servicePost = Action(parse.form(systemForm)) { implicit request =>
-    val serviceData = request.body
-    val newService = models.RegisteredSystem(serviceData.name, serviceData.url)
-    Redirect("/dashboard")
   }
 
 }

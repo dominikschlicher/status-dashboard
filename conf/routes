@@ -14,6 +14,6 @@ GET         /assets/*file           controllers.Assets.versioned(path="/public",
 
 GET         /dashboard              controllers.DashboardController.index
 
-GET         /registerService        controllers.RegisterServiceController.index
+GET         /register        controllers.RegisterSystemController.index
 
-POST        /registerService        controllers.RegisterServiceController.handleRequest
+POST        /register       controllers.RegisterSystemController.handleRequest

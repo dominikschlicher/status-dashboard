@@ -1,39 +1,39 @@
 package controllers
 
 
-import models.DashboardService
+import models.NewSystem
 import play.api.Play.current
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc._
 
-class RegisterServiceController extends Controller {
+class RegisterSystemController extends Controller {
 
 
-  val serviceForm = Form(
+  val systemForm = Form(
     mapping(
       "name" -> nonEmptyText,
       "url" -> nonEmptyText
-    )(DashboardService.apply)(DashboardService.unapply)
+    )(NewSystem.apply)(NewSystem.unapply)
   )
 
 
   def index = Action {
-    Ok(views.html.registerService(serviceForm))
+    Ok(views.html.registerSystem(systemForm))
   }
 
 
   def handleRequest = Action {
     implicit request => {
-      serviceForm.bindFromRequest.fold(
+      systemForm.bindFromRequest.fold(
         formWithErrors => {
           // binding failure, you retrieve the form containing errors:
-          BadRequest(views.html.registerService(formWithErrors)) // kein BadRequest
+          BadRequest(views.html.registerSystem(formWithErrors)) // kein BadRequest
         },
         serviceData => {
           /* binding success, you get the actual value. */
-          val newService = models.DashboardService(serviceData.name, serviceData.url)
+          val newService = models.NewSystem(serviceData.name, serviceData.url)
           Redirect("/dashboard")
         }
       )
@@ -41,9 +41,9 @@ class RegisterServiceController extends Controller {
   }
 
 
-  val servicePost = Action(parse.form(serviceForm)) { implicit request =>
+  val servicePost = Action(parse.form(systemForm)) { implicit request =>
     val serviceData = request.body
-    val newService = models.DashboardService(serviceData.name, serviceData.url)
+    val newService = models.NewSystem(serviceData.name, serviceData.url)
     Redirect("/dashboard")
   }
 

@@ -1,0 +1,14 @@
+@(serviceForm: Form[NewSystem])(implicit messages: Messages)
+
+
+@import helper._
+
+@helper.form(action = routes.RegisterSystemController.handleRequest()) {
+    @helper.inputText(serviceForm("name"))
+    @helper.inputText(serviceForm("url"))
+}
+
+
+
+
+

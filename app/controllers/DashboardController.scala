@@ -6,7 +6,7 @@ import models.{System, SystemStatus, SystemView}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json.{JsArray, JsPath, Reads}
-import play.api.libs.ws.WSClient
+import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc.{Action, Controller}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -23,15 +23,11 @@ class DashboardController @Inject()(implicit context: ExecutionContext, ws: WSCl
         (JsPath \ "status").read[String].map(value => SystemStatus.valueOf(value))
       ) (System.apply _)
 
-    val futureResult: Future[JsArray] = ws.url("http://localhost:9000/api/systems").get().map {
-      response => response.json.as[JsArray]
-    }
-
-    val futureSystems = futureResult.map[List[System]] {
-      jsArray => jsArray.value.map(value => value.as[System]).toList
-    }
-
-    val futureSystemViews = futureSystems.map(systems => systems.map(system => SystemView(system)))
-    futureSystemViews.map(systemViews => Ok(views.html.dashboard(systemViews)))
+    for (
+      response <- ws.url("http://localhost:9000/api/systems").get();
+      jsArray <- Future.successful(response.json.as[JsArray]);
+      systemList <- Future.successful(jsArray.value.map(value => value.as[System]).toList);
+      systemsView <- Future.successful(systemList.map(system => SystemView(system)))
+    ) yield Ok(views.html.dashboard(systemsView))
   }
 }

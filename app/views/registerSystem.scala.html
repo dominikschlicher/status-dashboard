@@ -1,14 +1,14 @@
-@(serviceForm: Form[NewSystem])(implicit messages: Messages)
+@(serviceForm: Form[RegisteredSystem])(implicit messages: Messages)
 
 
-@import helper._
 
-@helper.form(action = routes.RegisterSystemController.handleRequest()) {
-    @helper.inputText(serviceForm("name"))
-    @helper.inputText(serviceForm("url"))
+@main("Dashboard") {
+
+
+    @helper.form(action = routes.RegisterSystemController.handleRequest()) {
+        @helper.inputText(serviceForm("name"))
+        @helper.inputText(serviceForm("url"))
+    }
 }
-
-
-
 
 

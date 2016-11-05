@@ -1,7 +1,7 @@
 package controllers
 
 
-import models.NewSystem
+import models.RegisteredSystem
 import play.api.Play.current
 import play.api.data.Forms._
 import play.api.data._
@@ -15,7 +15,7 @@ class RegisterSystemController extends Controller {
     mapping(
       "name" -> nonEmptyText,
       "url" -> nonEmptyText
-    )(NewSystem.apply)(NewSystem.unapply)
+    )(RegisteredSystem.apply)(RegisteredSystem.unapply)
   )
 
 
@@ -33,7 +33,7 @@ class RegisterSystemController extends Controller {
         },
         serviceData => {
           /* binding success, you get the actual value. */
-          val newService = models.NewSystem(serviceData.name, serviceData.url)
+          val newService = models.RegisteredSystem(serviceData.name, serviceData.url)
           Redirect("/dashboard")
         }
       )
@@ -43,7 +43,7 @@ class RegisterSystemController extends Controller {
 
   val servicePost = Action(parse.form(systemForm)) { implicit request =>
     val serviceData = request.body
-    val newService = models.NewSystem(serviceData.name, serviceData.url)
+    val newService = models.RegisteredSystem(serviceData.name, serviceData.url)
     Redirect("/dashboard")
   }
 

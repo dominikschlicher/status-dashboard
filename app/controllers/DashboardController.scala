@@ -1,16 +1,33 @@
 package controllers
 
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 
-import models.{DOWN, RUNNING, System, SystemView}
+import models.{System, SystemStatus, SystemView}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.Reads._
+import play.api.libs.json.{JsArray, JsPath, Reads}
+import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc.{Action, Controller}
 
-@Singleton
-class DashboardController extends Controller {
+import scala.concurrent.{ExecutionContext, Future}
 
-  def index = Action {
-    val systems : List[System] = List(System("Foo", RUNNING), System("Bar", DOWN))
-    val systemViews = systems.map(system => SystemView(system))
-    Ok(views.html.dashboard(systemViews))
+// Combinator syntax
+
+@Singleton
+class DashboardController @Inject()(implicit context: ExecutionContext, ws: WSClient) extends Controller {
+
+  def index = Action.async {
+
+    implicit val systemReads: Reads[System] = (
+      (JsPath \ "name").read[String] and
+        (JsPath \ "status").read[String].map(value => SystemStatus.valueOf(value))
+      ) (System.apply _)
+
+    for (
+      response <- ws.url("http://localhost:9000/api/systems").get();
+      jsArray <- Future.successful(response.json.as[JsArray]);
+      systemList <- Future.successful(jsArray.value.map(value => value.as[System]).toList);
+      systemsView <- Future.successful(systemList.map(system => SystemView(system)))
+    ) yield Ok(views.html.dashboard(systemsView))
   }
 }

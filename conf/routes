@@ -16,4 +16,8 @@ GET         /dashboard           controllers.DashboardController.index
 
 GET         /register            controllers.RegisterSystemController.index
 
+
 POST        /register            controllers.RegisterSystemController.addSystem
+
+GET        /api/systems       controllers.ApiController.systems
+

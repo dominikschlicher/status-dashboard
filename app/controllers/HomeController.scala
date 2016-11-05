@@ -11,4 +11,8 @@ class HomeController @Inject() extends Controller {
     Redirect("/dashboard")
   }
 
+  def service = Action{
+    Redirect("/registerService")
+  }
+
 }

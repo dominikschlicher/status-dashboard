@@ -1,0 +1,14 @@
+@(serviceForm: Form[DashboardService])(implicit messages: Messages)
+
+
+@import helper._
+
+@helper.form(action = routes.RegisterServiceController.handleRequest()) {
+    @helper.inputText(serviceForm("name"))
+    @helper.inputText(serviceForm("url"))
+}
+
+
+
+
+

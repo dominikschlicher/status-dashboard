@@ -12,7 +12,7 @@ class HomeController @Inject() extends Controller {
   }
 
   def service = Action{
-    Redirect("/registerSystem")
+    Redirect("/register")
   }
 
 }

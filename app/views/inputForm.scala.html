@@ -1,0 +1,11 @@
+@()
+
+
+@for(member <-List("","")){
+    <div class="form-group row">
+        <label for="formGroupExampleInput" class="col-sm-2 col-form-label">@member</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name=@member>
+        </div>
+    </div>
+}

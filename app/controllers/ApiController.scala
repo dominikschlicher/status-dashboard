@@ -17,6 +17,10 @@ class ApiController extends Controller {
       JsObject(Seq(
         "name" -> JsString("Bar"),
         "status" -> JsString("DOWN")
+      )),
+      JsObject(Seq(
+        "name" -> JsString("Test"),
+        "status" -> JsString("RUNNING")
       ))
     ))
     Ok(json)

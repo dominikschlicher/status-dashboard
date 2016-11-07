@@ -5,7 +5,7 @@ import models.{RegisteredSystem, RegisteredSystems}
 import scala.concurrent.Future
 
 
-object SystemService {
+object RegisteredSystemService {
 
   def addSystem(system: RegisteredSystem): Future[String] = {
     RegisteredSystems.add(system)

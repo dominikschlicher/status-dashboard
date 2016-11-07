@@ -29,7 +29,6 @@ object SystemForm {
 
 class RegisteredSystemDef(tag: Tag) extends Table[RegisteredSystem](tag, "registeredSystem") {
 
-
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
   def name = column[String]("name")

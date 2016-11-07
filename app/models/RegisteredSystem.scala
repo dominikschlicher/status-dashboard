@@ -4,6 +4,7 @@ package models
 import play.api.Play
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 import slick.driver.MySQLDriver.api._
@@ -14,14 +15,19 @@ import scala.concurrent.Future
 
 case class RegisteredSystem(id: Long, name: String, url: String)
 
-case class RegisteredSystemForm(name: String, url: String)
+case class RegisteredSystemForm(name: String, url: String) {}
 
 
 object SystemForm {
+
+
+  val regexURL ="""(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})|"""
+  
+
   val systemForm = Form(
     mapping(
       "name" -> nonEmptyText,
-      "url" -> nonEmptyText
+      "url" -> text.verifying("Invalid URL-Pattern",{txt => txt.matches(regexURL)})
     )(RegisteredSystemForm.apply)(RegisteredSystemForm.unapply)
   )
 }

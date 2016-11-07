@@ -8,6 +8,14 @@
                 <div class="col-sm-10">
                     <input type="text" class="form-control" name="name" placeholder="codecentric" >
                 </div>
+                @if(serviceForm.hasGlobalErrors) {
+                    <ul>
+                    @for(error <- serviceForm.globalErrors) {
+                        <li>error.messages error.args</li>
+                    }
+                    </ul>
+                }
+
             </div>
             <div class="form-group row">
                 <label for="inputPassword3" class="col-sm-2 col-form-label">URL</label>
